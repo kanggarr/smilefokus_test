@@ -1,16 +1,58 @@
 # smilefokus_test
 
-A new Flutter project.
+A Flutter application for displaying and managing reward items. Users can view available rewards, save them to a wishlist, and redeem items based on their available points.
+
+---
 
 ## Getting Started
 
-This project is a starting point for a Flutter application.
+### 📋 Prerequisites
 
-A few resources to get you started if this is your first Flutter project:
+Before running this app, make sure you have the following installed:
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+- [Flutter SDK](https://docs.flutter.dev/get-started/install) (Recommended: version ≥ 3.10.0)
+- Dart SDK (included with Flutter)
+- An IDE like **VS Code** or **Android Studio**
+- A connected device or emulator for testing
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+---
+
+### How to Build and Run
+
+1. **Clone the repository:**
+
+   ```bash
+   git clone https://github.com/your-username/smilefokus_test.git
+   cd smilefokus_test
+   ```
+
+2. **Get Flutter packages:**
+
+   ```bash
+   flutter pub get
+   ```
+
+3. **Run the app:**
+
+   ```bash
+   flutter run
+   ```
+
+   > You can also run the app from your IDE using the "Run" or "Start Debugging" button.
+
+---
+
+## Features
+
+- Display a grid of reward items (2 columns)
+- Toggle favorite status to add/remove rewards from the wishlist
+- View reward detail page with image, name, description, and required points
+- Redeem rewards:
+  - If the user has enough points, a confirmation dialog will appear
+  - Points are deducted after successful redemption
+  - Redeem button is disabled if the user has insufficient points
+- Wishlist page shows only saved items and updates immediately when items are unsaved
+
+---
+
+## Project Structure
