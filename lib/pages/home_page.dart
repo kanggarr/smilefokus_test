@@ -59,6 +59,17 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
+  bool isSorted = false;
+
+  void sortRewards() {
+    setState(() {
+      isSorted = !isSorted;
+      widget.rewards.sort((a, b) => isSorted
+          ? a.rewardPoints.compareTo(b.rewardPoints)
+          : b.rewardPoints.compareTo(a.rewardPoints));
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     // ชื่อผู้ใช้งาน firstName และ lastName
@@ -106,76 +117,87 @@ class _HomePageState extends State<HomePage> {
           color: Colors.white,
           child: Padding(
             padding: const EdgeInsets.all(12),
-            // แสดงรายการของรางวัลในรูปแบบ Grid 2 คอลัมน์
-            child: GridView.builder(
-              itemCount: widget.rewards.length, // จำนวนไอเทมทั้งหมด
-              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 2, // 2 คอลัมน์
-                mainAxisSpacing: 16, // ช่องว่างแนวตั้งระหว่างไอเทม
-                crossAxisSpacing: 16, // ช่องว่างแนวนอนระหว่างไอเทม
-                childAspectRatio: 0.8, // อัตราส่วนความกว้างต่อความสูงของไอเทม
-              ),
-              itemBuilder: (context, index) {
-                final item = widget.rewards[index];
-                return GestureDetector(
-                  onTap: () =>
-                      openRewardDetails(item), // กดเปิดรายละเอียดรางวัล
-                  child: Card(
-                    elevation: 2,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12),
+            // แสดงรายการของรางวัล 2 คอลัมน์
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.end,
+              children: [
+                ElevatedButton.icon(
+                  onPressed: sortRewards,
+                  label: Text('Filter'),
+                  icon: Icon(Icons.sort),
+                ),
+                SizedBox(height: 8),
+                Expanded(
+                  child: GridView.builder(
+                    itemCount: widget.rewards.length, // จำนวนไอเทมทั้งหมด
+                    gridDelegate:
+                        const SliverGridDelegateWithFixedCrossAxisCount(
+                      crossAxisCount: 2,
+                      mainAxisSpacing: 16,
+                      crossAxisSpacing: 16,
+                      childAspectRatio: 0.8,
                     ),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Stack(
-                          children: [
-                            // รูปภาพรางวัลมุมบน
-                            ClipRRect(
-                              borderRadius: const BorderRadius.vertical(
-                                  top: Radius.circular(12)),
-                              child: Image.network(
-                                item.imageUrl,
-                                height: 100,
-                                width: double.infinity,
-                                fit: BoxFit.cover,
+                    itemBuilder: (context, index) {
+                      final item = widget.rewards[index];
+                      return GestureDetector(
+                        onTap: () => openRewardDetails(
+                            item), // กดเปิดหน้ารายละเอียดรางวัล
+                        child: Card(
+                          elevation: 2,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Stack(
+                                children: [
+                                  ClipRRect(
+                                    borderRadius: const BorderRadius.vertical(
+                                        top: Radius.circular(12)),
+                                    child: Image.network(
+                                      item.imageUrl,
+                                      height: 100,
+                                      width: double.infinity,
+                                      fit: BoxFit.cover,
+                                    ),
+                                  ),
+                                  Positioned(
+                                    top: 8,
+                                    right: 8,
+                                    child: InkWell(
+                                      onTap: () => toggleFavorite(index),
+                                      child: Icon(
+                                        item.isFavorite
+                                            ? Icons.favorite
+                                            : Icons.favorite_border,
+                                        color: item.isFavorite
+                                            ? Colors.red
+                                            : Colors.grey,
+                                      ),
+                                    ),
+                                  ),
+                                ],
                               ),
-                            ),
-                            // ปุ่มกดชอบ (favorite) อยู่มุมบนขวาของรูปภาพ
-                            Positioned(
-                              top: 8,
-                              right: 8,
-                              child: InkWell(
-                                onTap: () => toggleFavorite(index),
-                                child: Icon(
-                                  item.isFavorite
-                                      ? Icons.favorite
-                                      : Icons.favorite_border,
-                                  color: item.isFavorite
-                                      ? Colors.red
-                                      : Colors.grey,
-                                ),
+                              Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: Text(item.name,
+                                    style: const TextStyle(
+                                        fontWeight: FontWeight.bold)),
                               ),
-                            ),
-                          ],
+                              Padding(
+                                padding:
+                                    const EdgeInsets.symmetric(horizontal: 8.0),
+                                child: Text('${item.rewardPoints} Points'),
+                              ),
+                            ],
+                          ),
                         ),
-                        // ชื่อรางวัล
-                        Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: Text(item.name,
-                              style:
-                                  const TextStyle(fontWeight: FontWeight.bold)),
-                        ),
-                        // คะแนนที่ต้องใช้แลกรางวัล
-                        Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                          child: Text('${item.rewardPoints} Points'),
-                        ),
-                      ],
-                    ),
+                      );
+                    },
                   ),
-                );
-              },
+                ),
+              ],
             ),
           ),
         ),

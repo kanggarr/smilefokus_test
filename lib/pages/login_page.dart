@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:smilefokus_test/home.dart';
+import 'package:smilefokus_test/home.dart'; // นำเข้าไฟล์ HomePage
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -9,16 +9,20 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
+  // TextField อีเมลและรหัสผ่าน
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
 
+  // ตัวแปรเก็บข้อความแสดงข้อผิดพลาด
   String? emailError;
   String? passwordError;
   String? loginError;
 
+  // อีเมลและรหัสผ่านที่ถูกต้อง
   final String correctEmail = 'smile@smilefokus.com';
   final String correctPassword = '11111111';
 
+  // ฟังก์ชันตรวจสอบข้อมูลและล็อกอิน
   void _validateAndLogin() {
     setState(() {
       emailError = null;
@@ -29,10 +33,14 @@ class _LoginPageState extends State<LoginPage> {
     String email = _emailController.text.trim();
     String password = _passwordController.text.trim();
 
+    // ตรวจสอบรูปแบบอีเมลด้วย Regular Expression
     final emailRegex = RegExp(r'^[\w\.-]+@[\w\.-]+\.\w+$');
     bool isEmailValid = emailRegex.hasMatch(email);
+
+    // ตรวจสอบว่ารหัสผ่านเป็นตัวเลข 8 หลัก
     bool isPasswordValid = RegExp(r'^\d{8}$').hasMatch(password);
 
+    // กำหนดข้อความแสดงข้อผิดพลาดถ้าไม่ผ่าน validation
     if (!isEmailValid) {
       emailError = 'Please enter a valid email';
     }
@@ -40,12 +48,10 @@ class _LoginPageState extends State<LoginPage> {
       passwordError = 'Password must be 8 digits';
     }
 
+    // ถ้าผ่าน validation ทั้งสอง
     if (isEmailValid && isPasswordValid) {
+      // ตรวจสอบว่าอีเมลและรหัสผ่านตรงกับข้อมูลที่กำหนดไว้หรือไม่
       if (email == correctEmail && password == correctPassword) {
-        // ScaffoldMessenger.of(context).showSnackBar(
-        //   const SnackBar(content: Text('Login successful')),
-        // );
-
         Future.delayed(const Duration(milliseconds: 300), () {
           Navigator.pushReplacement(
             context,
@@ -58,6 +64,7 @@ class _LoginPageState extends State<LoginPage> {
           );
         });
       } else {
+        // กรณีข้อมูลล็อกอินไม่ถูกต้อง
         loginError = 'Incorrect email or password';
       }
     }
@@ -79,11 +86,13 @@ class _LoginPageState extends State<LoginPage> {
               const Text(
                 'smileReward',
                 style: TextStyle(
-                    fontSize: 32,
-                    fontWeight: FontWeight.w600,
-                    color: Color(0xFF000000)),
+                  fontSize: 32,
+                  fontWeight: FontWeight.w600,
+                  color: Color(0xFF000000),
+                ),
               ),
               const SizedBox(height: 40),
+              // ช่องกรอกอีเมล พร้อมแสดง error ถ้าตรวจสอบไม่ผ่าน
               TextField(
                 controller: _emailController,
                 decoration: InputDecoration(
@@ -101,6 +110,7 @@ class _LoginPageState extends State<LoginPage> {
                 keyboardType: TextInputType.emailAddress,
               ),
               const SizedBox(height: 16),
+              // ช่องกรอกรหัสผ่านพร้อมแสดง error
               TextField(
                 controller: _passwordController,
                 decoration: InputDecoration(
@@ -118,6 +128,7 @@ class _LoginPageState extends State<LoginPage> {
                 obscureText: true,
                 keyboardType: TextInputType.number,
               ),
+              // ข้อความแสดงข้อผิดพลาดการล็อกอิน (เช่น รหัสผ่านผิด)
               if (loginError != null)
                 Padding(
                   padding: const EdgeInsets.only(top: 12),
@@ -127,11 +138,13 @@ class _LoginPageState extends State<LoginPage> {
                   ),
                 ),
               const SizedBox(height: 32),
+              // ปุ่ม Sign In
               SizedBox(
                 width: double.infinity,
                 height: 50,
                 child: ElevatedButton(
-                  onPressed: _validateAndLogin,
+                  onPressed:
+                      _validateAndLogin, // เรียกฟังก์ชันตรวจสอบและล็อกอิน
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.black87,
                     shape: RoundedRectangleBorder(
@@ -141,7 +154,9 @@ class _LoginPageState extends State<LoginPage> {
                   child: const Text(
                     'Sign In',
                     style: TextStyle(
-                        fontWeight: FontWeight.bold, color: Color(0xFFFFFFFF)),
+                      fontWeight: FontWeight.bold,
+                      color: Color(0xFFFFFFFF),
+                    ),
                   ),
                 ),
               ),
